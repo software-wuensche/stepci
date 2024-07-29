@@ -148,7 +148,13 @@
                                         "client_secret": {
                                             "type": "string"
                                         },
+                                        "contentType": {
+                                            "$ref": "#/definitions/OauthContentType"
+                                        },
                                         "endpoint": {
+                                            "type": "string"
+                                        },
+                                        "scope": {
                                             "type": "string"
                                         }
                                     },
@@ -1302,6 +1308,22 @@
                                         "type": "object"
                                     },
                                     {
+                                        "properties": {
+                                            "json": {
+                                                "additionalProperties": true,
+                                                "properties": {},
+                                                "type": "object"
+                                            },
+                                            "type": {
+                                                "type": "string"
+                                            },
+                                            "value": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    {
                                         "type": "string"
                                     }
                                 ]
@@ -1466,24 +1488,20 @@
                                         "audience": {
                                             "type": "string"
                                         },
-                                        "scope": {
-                                            "type": "string"
-                                        },
                                         "client_id": {
                                             "type": "string"
                                         },
                                         "client_secret": {
                                             "type": "string"
                                         },
+                                        "contentType": {
+                                            "$ref": "#/definitions/OauthContentType"
+                                        },
                                         "endpoint": {
                                             "type": "string"
                                         },
-                                        "contentType": {
-                                            "type": "string",
-                                            "enum": [
-                                                "application/x-www-form-urlencoded",
-                                                "application/json"
-                                            ]
+                                        "scope": {
+                                            "type": "string"
                                         }
                                     },
                                     "required": [
@@ -2593,6 +2611,13 @@
                 }
             ]
         },
+        "OauthContentType": {
+            "enum": [
+                "application/json",
+                "application/x-www-form-urlencoded"
+            ],
+            "type": "string"
+        },
         "SharedArrayBuffer": {
             "properties": {
                 "__@species@469": {
@@ -2754,7 +2779,13 @@
                                         "client_secret": {
                                             "type": "string"
                                         },
+                                        "contentType": {
+                                            "$ref": "#/definitions/OauthContentType"
+                                        },
                                         "endpoint": {
+                                            "type": "string"
+                                        },
+                                        "scope": {
                                             "type": "string"
                                         }
                                     },
@@ -4499,7 +4530,13 @@
                                                     "client_secret": {
                                                         "type": "string"
                                                     },
+                                                    "contentType": {
+                                                        "$ref": "#/definitions/OauthContentType"
+                                                    },
                                                     "endpoint": {
+                                                        "type": "string"
+                                                    },
+                                                    "scope": {
                                                         "type": "string"
                                                     }
                                                 },
@@ -5447,7 +5484,13 @@
                                                     "client_secret": {
                                                         "type": "string"
                                                     },
+                                                    "contentType": {
+                                                        "$ref": "#/definitions/OauthContentType"
+                                                    },
                                                     "endpoint": {
+                                                        "type": "string"
+                                                    },
+                                                    "scope": {
                                                         "type": "string"
                                                     }
                                                 },
@@ -5867,7 +5910,13 @@
                                     "client_secret": {
                                         "type": "string"
                                     },
+                                    "contentType": {
+                                        "$ref": "#/definitions/OauthContentType"
+                                    },
                                     "endpoint": {
+                                        "type": "string"
+                                    },
+                                    "scope": {
                                         "type": "string"
                                     }
                                 },
@@ -7052,7 +7101,13 @@
                                                         "client_secret": {
                                                             "type": "string"
                                                         },
+                                                        "contentType": {
+                                                            "$ref": "#/definitions/OauthContentType"
+                                                        },
                                                         "endpoint": {
+                                                            "type": "string"
+                                                        },
+                                                        "scope": {
                                                             "type": "string"
                                                         }
                                                     },
@@ -7381,3 +7436,4 @@
     ],
     "type": "object"
 }
+
