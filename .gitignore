@@ -105,3 +105,6 @@ dist
 
 # VitePress
 cache/
+
+# ignore local testing workflow files
+test/*.stepci.yml

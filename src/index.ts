@@ -9,7 +9,7 @@ import exit from 'exit'
 import chalk from 'chalk'
 import { EventEmitter } from 'node:events'
 import { defaultText } from './lib/constants'
-import { checkOptionalEnvArrayFormat, parseEnvArray } from './lib/utils'
+import { checkOptionalEnvArrayFormat, exportReport, parseEnvArray } from './lib/utils'
 import { renderStep, renderSummary, renderStepSummary, renderFeedbackMessage, renderLoadTest, renderAnalyticsMessage } from './lib/render'
 import { sendAnalyticsEvent } from './lib/analytics'
 
@@ -29,7 +29,6 @@ ee.on('test:result', (test: TestResult) => {
 ee.on('workflow:result', ({ result }: WorkflowResult) => {
   renderSummary(result)
   renderFeedbackMessage()
-  if (!result.passed) exit(5)
 })
 
 yargs(hideBin(process.argv))
@@ -74,6 +73,14 @@ yargs(hideBin(process.argv))
         describe: 'number of concurrency executions',
         type: 'number'
       })
+      .option('report', {
+        alias: 'r',
+        string: true,
+        demandOption: false,
+        describe: 'generate a json report at given path after running the workflow',
+        type: 'string',
+        default: 'report.json'
+      })
       .check(({ e: envs, s: secrets }) => {
         if (checkOptionalEnvArrayFormat(envs)) {
           throw new Error('env variables have wrong format, use `env=VARIABLE`.')
@@ -88,6 +95,15 @@ yargs(hideBin(process.argv))
   }, async (argv) => {
     verbose = argv.verbose
 
+    if(verbose){
+      ee.on('step:http_request', (request) => {
+        console.log(JSON.stringify({request: {method: request.method, host: request.host, path: request.path}}, null, 2))
+      })
+      ee.on('step:http_response', (response) => {
+        console.log(JSON.stringify({response: {statusCode: response.statusCode, statusMessage: response.statusMessage}}, null, 2))
+      })
+    }
+
     if (argv.loadtest) {
       console.log(chalk.yellowBright(`⚠︎ Running a load test. This may take a while`))
       const { result } = await loadTestFromFile(argv.workflow, {
@@ -97,16 +113,19 @@ yargs(hideBin(process.argv))
 
       renderLoadTest(result)
       renderFeedbackMessage()
+      if(argv.report) exportReport(result, argv.report)
       if (!result.passed) exit(5)
       return
     }
 
-    runFromFile(argv.workflow, {
+    const {result} = await runFromFile(argv.workflow, {
       env: parseEnvArray(argv.e),
       secrets: parseEnvArray(argv.s),
       ee,
       concurrency: argv.concurrency
     })
+    if(argv.report) exportReport(result, argv.report)
+    if (!result.passed) exit(5)
   })
   .command('generate [spec] [path]', 'generate workflow from OpenAPI spec', yargs => {
     return yargs

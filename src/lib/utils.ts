@@ -1,4 +1,6 @@
 import { WorkflowEnv } from '@stepci/runner'
+import fs from 'fs'
+import path from 'path'
 
 // Check if env format matches the convention e.g. `variable=VARIABLE`
 export const checkEnvFormat = (str: string) => str.match(/^(\w+=.+)$/)
@@ -26,4 +28,10 @@ export function isJSON (input: string | object) {
   } catch (e) {
     return false
   }
+}
+
+export function exportReport(jsonObject: object, reportPath: string) {
+  fs.mkdirSync(path.dirname(reportPath), { recursive: true })
+  fs.writeFileSync(reportPath, JSON.stringify(jsonObject, null, 2))
+  console.log(`Report generated at ${reportPath}`)
 }
