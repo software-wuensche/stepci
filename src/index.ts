@@ -97,11 +97,13 @@ yargs(hideBin(process.argv))
 
     if(verbose){
       ee.on('step:http_request', (request) => {
-        console.log(JSON.stringify({request: {method: request.method, host: request.host, path: request.path}}, null, 2))
-      })
+        const { method, host, path } = request;
+        console.log(JSON.stringify({ request: { method, host, path } }, null, 2));
+      });
       ee.on('step:http_response', (response) => {
-        console.log(JSON.stringify({response: {statusCode: response.statusCode, statusMessage: response.statusMessage}}, null, 2))
-      })
+        const { statusCode, statusMessage } = response;
+        console.log(JSON.stringify({ response: { statusCode, statusMessage } }, null, 2));
+      });
     }
 
     if (argv.loadtest) {
